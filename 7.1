@@ -1,0 +1,60 @@
+class Product:
+    def __init__(self, name: str, weight: float, category: str):
+        self.name = name
+        self.weight = weight
+        self.category = category
+
+    def __str__(self):
+        return f"{self.name}, {self.weight}, {self.category}"
+
+
+class Shop:
+    def __init__(self):
+        self.__file_name = 'products.txt'
+
+    def get_products(self) -> str:
+        try:
+            with open(self.__file_name, 'r', encoding='utf-8') as file:
+                return file.read().strip()
+        except FileNotFoundError:
+            return "Файл с продуктами пока пуст."
+
+    def add(self, *products: Product):
+        existing_products = set()
+
+        # Проверяем, есть ли файл, и считываем существующие продукты
+        try:
+            with open(self.__file_name, 'r', encoding='utf-8') as file:
+                for line in file:
+                    name, _, _ = line.strip().split(', ')
+                    existing_products.add(name)
+        except FileNotFoundError:
+            pass
+
+        # Добавляем новые продукты
+        with open(self.__file_name, 'a', encoding='utf-8') as file:
+            for product in products:
+                if product.name in existing_products:
+                    print(f"Продукт {product.name} уже есть в магазине")
+                else:
+                    file.write(str(product) + '\n')
+                    existing_products.add(product.name)
+
+
+# Пример использования
+# Создаем продукты
+potato = Product('Potato', 50.0, 'Vegetables')
+carrot = Product('Carrot', 30.5, 'Vegetables')
+apple = Product('Apple', 20.0, 'Fruits')
+
+# Создаем магазин
+shop = Shop()
+
+# Добавляем продукты
+shop.add(potato, carrot, apple)
+
+# Пробуем добавить продукт повторно
+shop.add(potato)
+
+# Читаем все продукты из файла
+print(shop.get_products())
