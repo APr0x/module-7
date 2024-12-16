@@ -31,7 +31,7 @@ class WordsFinder:
     def find(self, word):
         """
         Метод для поиска первого вхождения слова в каждом файле.
-        Возвращает словарь: ключ - название файла, значение - индекс первого вхождения.
+        Возвращает словарь: ключ - название файла, значение - позиция первого вхождения (начиная с 1).
         """
         word = word.lower()
         result = {}
@@ -39,7 +39,7 @@ class WordsFinder:
 
         for name, words in all_words.items():
             try:
-                result[name] = words.index(word)
+                result[name] = words.index(word) + 1  # Индексация начинается с 1.
             except ValueError:
                 result[name] = -1  # Если слово не найдено, возвращаем -1.
 
